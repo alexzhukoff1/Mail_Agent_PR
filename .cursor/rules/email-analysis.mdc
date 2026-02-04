@@ -1,0 +1,31 @@
+---
+description: Email parsing, scoring, and learning engine specifics
+globs: email_parser/**/*.py, analysis_engine/**/*.py, risk_aggregator/**/*.py, learning_engine/**/*.py
+alwaysApply: false
+---
+
+# Email Analysis Conventions
+
+## Parsing & Sanitization
+- **Sanitize HTML** before any extraction: remove script, style, iframe, tracking pixels
+- **Extract URL metadata only**—no actual URLs stored, only domains
+- **Max body length** ~10KB for text extraction
+- **Hash subject patterns** for learning (no raw subject in storage)
+
+## Risk Scoring
+- **Weights**: rules 40%, stats 30%, learning 20%, LLM 10%
+- **Score range**: -1.0 (safe) to +1.0 (dangerous)
+- **LLM only when ambiguous**: variance > 0.3 or confidence < 0.6
+- **Always fallback** when LLM unavailable
+
+## Learning Engine
+- **Features only**—no raw email content in learning storage
+- **Time decay**: 90-day half-life for old signals
+- **Established decisions**: 5+ confirmations, 0.85+ confidence
+- **Conflicts**: track confirmations vs contradictions
+
+## LLM Safety
+- **Never include raw email body** in prompts
+- **Sanitize subject** for prompt injection (remove "ignore previous", "act as")
+- **Structured output**: RISK:, REASON:, FACTORS:
+- **Rate limit**: ~20 calls/hour

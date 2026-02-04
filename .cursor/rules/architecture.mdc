@@ -1,0 +1,38 @@
+---
+description: Target architecture and layered structure for Email Audit Agent
+globs: **/*.py
+alwaysApply: false
+---
+
+# Target Architecture
+
+## Layered Monolith Structure
+
+```
+telegram_interface/ → email_connectors/ → email_parser/ → risk_aggregator/
+         ↓                    ↓                ↓
+analysis_engine/  learning_engine/  llm_explainer/
+         ↓
+storage/ → security/ → monitoring/
+```
+
+## Layer Responsibilities
+
+| Layer | Purpose |
+|-------|---------|
+| `telegram_interface/` | Bot commands, formatters, rate limiter |
+| `email_connectors/` | IMAP/Gmail API, provider quirks, connection pool |
+| `email_parser/` | Sanitizer, header analyzer, metadata extractor |
+| `risk_aggregator/` | Scorer, conflict resolver, confidence calculator |
+| `analysis_engine/` | Rules, patterns, deterministic scoring |
+| `learning_engine/` | Features, weights, decay, established decisions |
+| `llm_explainer/` | Safe prompts, fallback, rate limit |
+| `storage/` | Metadata, features, decisions, cache, migrations |
+| `security/` | Encryption, secrets, audit log, prompt injection guard |
+| `monitoring/` | Health checker, metrics, alerting |
+
+## Key Conventions
+- Use dependency injection for testability
+- Each layer depends only on layers below
+- No circular dependencies
+- Provider-specific code in `*_imap.py` (e.g. `yandex_imap.py`, `mailru_imap.py`)

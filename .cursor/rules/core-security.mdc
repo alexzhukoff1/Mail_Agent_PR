@@ -1,0 +1,31 @@
+---
+description: Iron laws and security-first principles for Email Audit Agent
+alwaysApply: true
+---
+
+# Iron Laws (NEVER VIOLATE)
+
+## 1. Read-Only Principle
+- **FORBIDDEN**: Reply, forward, open links, download attachments, mark read/unread, move/delete emails
+- **FORBIDDEN**: Execute ANY email-triggered action
+- System is READ-ONLY + ADVISOR + LEARNING only
+
+## 2. Network Isolation
+- **FORBIDDEN**: HTTP requests using email content (URLs, domains)
+- **FORBIDDEN**: DNS lookups of email domains for reputation
+- **FORBIDDEN**: API calls triggered by email data
+
+## 3. Zero Auto-Execution
+- **ALLOWED**: Analyze, score, explain, suggest, learn from feedback
+- **FORBIDDEN**: Execute "obvious" actions, auto-archive spam, auto-trust based on patterns
+
+## 4. Security First
+**When in doubt → choose safer option.**  
+If you can't explain why something is safe → don't do it.
+
+## Security Checklist
+- [ ] No raw email body in LLM prompts (sanitize first)
+- [ ] No actual URLs stored—only domains
+- [ ] Credentials encrypted at rest
+- [ ] Audit logging for all decisions
+- [ ] Whitelist-only Telegram access

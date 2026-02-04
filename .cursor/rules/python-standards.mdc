@@ -1,0 +1,53 @@
+---
+description: Python code style and standards for Email Audit Agent
+globs: **/*.py
+alwaysApply: false
+---
+
+# Python Standards
+
+## Required
+- **Type hints** on all functions and methods
+- **Docstrings** on all public classes and functions
+- **Log** instead of print (`logger.info`, `logger.error`)
+- **Explicit error handling**—never bare `except:`
+- **Testable**—use dependency injection
+
+## Error Handling
+
+```python
+# ❌ BAD
+try:
+    await fetch_data()
+except Exception:
+    pass
+
+# ✅ GOOD
+try:
+    await fetch_data()
+except Exception as e:
+    logger.error(f"Failed to fetch: {e}")
+    raise DataFetchError("Unable to retrieve data", cause=e) from e
+```
+
+## Docstring Format
+
+```python
+def analyze(self, email: ParsedEmail) -> RiskScore:
+    """
+    Analyze email and return risk score.
+
+    Args:
+        email: Parsed email to analyze
+
+    Returns:
+        RiskScore with breakdown and explanations
+
+    Raises:
+        AnalysisError: If analysis fails
+    """
+```
+
+## Data Classes
+- Use `@dataclass` for structured data (e.g. `ParsedEmail`, `RiskScore`)
+- Use `Enum` for fixed sets (e.g. `EmailProvider`)

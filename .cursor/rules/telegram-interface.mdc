@@ -1,0 +1,30 @@
+---
+description: Telegram bot interface conventions and security
+globs: telegram_interface/**/*.py
+alwaysApply: false
+---
+
+# Telegram Interface
+
+## Security
+- **Whitelist** single `chat_id`—reject all others
+- **No URL previews**—plain text only
+- **Rate limiting**: ~20 messages/minute per user
+- **Anti-flood**: 0.05s delay between messages
+
+## Commands Reference
+- `/check` — analyze new emails
+- `/why <id>` — detailed explanation
+- `/decide <id> <category>` — teach: spam|phishing|important|normal|ignore
+- `/trust <sender>`, `/block <sender>`, `/forget <sender>`
+- `/learning` — show learning stats
+
+## Formatting
+- **Safe formatting**: no clickable links in alerts
+- **Mask domains**: show only domain names, not full URLs
+- **Attachment types**: extensions only (e.g. `.pdf`, `.exe`)
+- Use `parse_mode='Markdown'` for structured output
+
+## Message Batching
+- Use `MessageBatcher` for >10 items
+- Send summary + first N items
